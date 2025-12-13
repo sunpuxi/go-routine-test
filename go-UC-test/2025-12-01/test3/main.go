@@ -73,12 +73,14 @@ func pipeline(input <-chan int, stages ...Stage) <-chan int {
 func generateInput(count int) <-chan int {
 	ch := make(chan int)
 	go func() {
+		// 记得关闭通道防止下一个消费者遍历通道时无法正常结束
 		defer close(ch)
 		for i := 1; i <= count; i++ {
 			fmt.Printf("输入: %d\n", i)
 			ch <- i
 		}
 	}()
+	// 提前返回通道
 	return ch
 }
 
